@@ -12,9 +12,9 @@ library(mvtnorm)
 
 ##Support vector classifier (Binary classifier)
 
-########################
-#CASE1 (n1= 30, n2 = 20)
-########################
+#########################
+#CASE1 (n1= 30, n2 = 20)#
+#########################
 #1. Data generation 
 
 #1.1 set values and covariance matrix
@@ -99,7 +99,6 @@ p = 2
 Sig1 = matrix(c(3,-0.75,-0.75,4), nrow=2, ncol=2) #covariance matrix 1
 Sig2 = matrix(c(2,0.5,0.5,2), nrow=2, ncol=2) #covariance matrix 2
 
-
 #1.2 create a training and test dataset
 
 #1.2.1 dataset
@@ -114,7 +113,6 @@ dim(dat)
 head(dat)
 plot(x, col=(3-y))
 
-
 #1.2.2 separate dataset into training and test set
 index = sample(1:(n1+n2),300)
 length(index)
@@ -122,6 +120,31 @@ train = dat[index,] #training set
 test = dat[-index,] #test set
 dim(train)
 dim(test)
+
+
+#2. Classifier (non-linear case)
+fit = svm(y ~., data=train, kernel='radial', gamma=1, cost=10, scale=FALSE)
+summary(fit)
+fit$index
+plot(fit,train)
+
+#2.1 Parmater tuning of 'SVM' using 5-fold Cross Validation
+#tuning parameter = cost, gamma
+c = tune(svm, y ~., data=train, kernel='radial', tunecontrol =
+           tune.control(cross=5), range=list(cost=c(0.001,0.01,0.1,1,5,10,100), 
+                                             gamma=c(0.1,0.5,1,2,3,4,5)))
+summary(c)
+bestM = c$best.model
+summary(bestM)
+plot(bestM,train)
+
+#3. Prediction
+head(test)
+nrow(test)
+yhat = predict(bestM, test)
+sum(yhat != test$y) / nrow(test)
+
+
 
 
 
