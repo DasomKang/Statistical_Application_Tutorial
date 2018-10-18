@@ -12,12 +12,14 @@ library(mvtnorm)
 
 ##Support vector classifier (Binary classifier)
 
-
-#1. Data generation
+########################
+#CASE1 (n1= 30, n2 = 20)
+########################
+#1. Data generation 
 
 #1.1 set values and covariance matrix
-n1 = 100
-n2 = 80
+n1 = 30
+n2 = 20
 p = 2
 
 Sig = matrix(c(2,-0.75,-0.75,4), nrow=2, ncol=2) #covariance matrix
@@ -80,5 +82,47 @@ plot(bestM,train)
 head(test)
 yhat = predict(bestM, test)
 sum(yhat != y.te)/ (n1+n2)
+
+
+
+################################
+#CASE2 #CASE1 (n1= 200, n2 = 200)
+################################
+
+#1. Data generation 
+
+#1.1 set values and covariance matrix
+n1 = 200
+n2 = 200
+p = 2
+
+Sig1 = matrix(c(3,-0.75,-0.75,4), nrow=2, ncol=2) #covariance matrix 1
+Sig2 = matrix(c(2,0.5,0.5,2), nrow=2, ncol=2) #covariance matrix 2
+
+
+#1.2 create a training and test dataset
+
+#1.2.1 dataset
+x1 = rmvnorm(n1, mean=rep(0,p), sigma=Sig1)
+x2 = rmvnorm(n2, mean=rep(5,p), sigma=Sig2)
+
+x = rbind(x1, x2)
+y = c(rep(-1,n1), rep(1,n2))
+
+dat = data.frame(x, y=as.factor(y))
+dim(dat)
+head(dat)
+plot(x, col=(3-y))
+
+
+#1.2.2 separate dataset into training and test set
+index = sample(1:(n1+n2),300)
+length(index)
+train = dat[index,] #training set
+test = dat[-index,] #test set
+dim(train)
+dim(test)
+
+
 
 
