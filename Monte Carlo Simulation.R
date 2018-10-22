@@ -42,6 +42,9 @@ sd(theta)/sqrt(m)
 
 
 
+
+
+
 ##2. Simple example 2 (when X1, ..., XN ~ N(2,1))
 
 # X1, ..., XN ~ N(2,1)
@@ -70,4 +73,5 @@ median((med-theta)^2)
 
 #MSE of sample trimmed mean
 mean((tmean-theta)^2)
+
 
