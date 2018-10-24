@@ -60,3 +60,54 @@ for (i in 1:r)
 plot(mu1, power.hat, type='b', main='Empirical Power', ylab='Power', col='blue')
 lines(mu1, power1.hat, type='b', col='red')
 
+##3. Example : Regression
+
+#Regression : Y_1 = 2 + 3X_1 - 0.5X_2 + epsilon
+#epsilon's ~ N(0,1)
+#Empirical (1-alpha) % Confidence Interval for beta_1 & beta_2
+
+m = 10
+alpha = 0.05
+X1 = 1:10
+X2 = sample(1:10, 10)
+n = length(X1)
+sigma = 1
+beta = NULL
+
+
+for (j in 1:m)
+{
+  Y = 2 + 3*X1 - 0.5*X2 + rnorm(n, 0, sigma) #rnorm : epsilon_i
+  reg = lm(Y~X1+X2)
+  beta = rbind(beta, reg$coefficients[2:3]) #beta_2, beta_3
+}
+
+
+xx1 = seq(2.6,3.4,0.01)
+xx2 = seq(-1,0.3,0.01)
+X = cbind(1,X1,X2)
+varb = sigma^2 * solve(t(X)%*%X)
+sb = sqrt(diag(varb))
+
+?dnorm
+
+par(mfrow=c(1,2))
+hist(beta[,1], prob=TRUE, main='Distribution of beta_1')
+lines(xx1, dnorm(xx1, 3, sb[2]), col='red') # red line: theoredical
+lines(density(beta[,1]), col='blue') # blue line: Estimated density of beta_1.hat (MC)
+
+hist(beta[,2], prob=TRUE, main='Distribution of beta_2')
+lines(xx2, dnorm(xx2, -0.5, sb[3]), col='red') # red line: theoredical
+lines(density(beta[,2]), col='blue') # blue line: Estimated density of beta_2.hat (MC)
+
+?apply
+beta.hat = apply(beta, 2, mean)
+beta.hat
+
+se = apply(beta,2,sd) #Estimated SE of beta
+se
+
+CI1 = quantile(beta[,1], probs=c((alpha/2), (1-alpha/2)))
+CI2 = quantile(beta[,2], probs=c((alpha/2), (1-alpha/2)))
+CI1
+CI2
