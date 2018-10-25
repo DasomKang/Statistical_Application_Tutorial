@@ -111,3 +111,64 @@ CI1 = quantile(beta[,1], probs=c((alpha/2), (1-alpha/2)))
 CI2 = quantile(beta[,2], probs=c((alpha/2), (1-alpha/2)))
 CI1
 CI2
+
+
+
+##4. Example : Empirical type 1 error rate for beta1:
+
+#H_0 : beta = 0 vs H_1 : beta != 0
+# Regression : Y_1 = 2 + 3*X_1 - 0.5*X_2 + epsilon
+# epsilon ~ N(0,1)
+
+m = 10000
+alpha = 0.05
+X1 = 1:10
+X2 = sample(1:10, 10)
+X = cbind(1, X1, X2)
+n = length(X1)
+p = 2
+sigma = 1
+
+TR = 0
+for (j in 1:m)
+{
+  Y = 2 - 0.5*X2 + rnorm(n, 0, sigma) #beta.hat_1 = 0 인 상태에서의 y값
+  reg = lm(Y~X1+X2)
+  hat.sigma2 = sum(reg$residuals^2)/(n-p-1)
+  hat.varb = hat.sigma2*solve(t(X)%*%X)
+  T = reg$coefficients[2] / sqrt(hat.varb[2,2])
+  if (abs(T) > qt(0.975, n-p-1)) TR = TR + 1
+}
+
+##Empirical type 1 error rate
+TR/m
+
+## (1-alpha) 100% confidence band 
+
+#Y = 1 + 2*X + epsilon
+#epsilon ~ N(0, 5^2)
+
+m = 1000
+X = seq(0,10,1)
+X0 = seq(-5,15,0.1)
+n = length(X)
+sigma = 5
+
+Yhat = NULL
+lb = NULL
+ub = NULL
+for (j in 1:m)
+{
+  Y = 1 + 2*X + rnorm(n,0,sd=sigma)
+  reg = lm(Y~X)
+  b = reg$coefficients
+  Yh = b[1] + b[2] * X0
+  Yhat = rbind(Yhat, Yh)
+}
+
+par(mfrow = c(1,2))
+AL = apply(Yhat, 2, mean)
+PB = apply(Yhat, 2, quantile, prob=c(0.025,0.975))
+plot(X0, AL, type='l', col='blue')
+lines(X0, PB[1,], lty=2, col='red')
+lines(X0, PB[2,], lty=2, col='red')
