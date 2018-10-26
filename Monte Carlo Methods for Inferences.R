@@ -20,7 +20,7 @@ for (j in 1:m)
   else I[j]=0
 }
 
-# Empirical Type 1 error rate;
+# Empirical Type 1 error rate
 TypeI = mean(I)
 se.hat = sqrt(TypeI*(1-TypeI)/m)
 c(TypeI,se.hat)
@@ -172,3 +172,4 @@ PB = apply(Yhat, 2, quantile, prob=c(0.025,0.975))
 plot(X0, AL, type='l', col='blue')
 lines(X0, PB[1,], lty=2, col='red')
 lines(X0, PB[2,], lty=2, col='red')
+
