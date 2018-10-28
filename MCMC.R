@@ -42,3 +42,41 @@ for (i in 1:4)
   hist(sim.vec[i,50000:N], n= 50, prob=TRUE, add=T)
   lines(x,y,col="red")
 }
+
+#1. Gibbs sampler
+
+#bivariate normal distribution <- target dist
+
+par(mfrow=c(1,2))
+library(MASS)
+
+mu = c(0,0)
+sigma = matrix(c(1,0.8,1,0.8),2,2)
+Y = mvrnorm(100,mu,sigma)
+plot(Y, xlim=c(-11,11), ylim=c(-11,11), xlab="X1", ylab="X2", main="Bivarate Normal")
+
+N = 100
+rho = 0.8
+
+X1 = vector('numeric', N)
+X2 = vector('numeric', N)
+
+#Chain 1
+X1[1] = 10
+X2[1] = 10
+
+for (i in 2:100)
+{
+  if ( i%%2 == 1)
+  {
+    X1[i] = X1[i-1]
+    X2[i] = rnorm(1, mean=rho*X1[i-1], sd=sqrt(1-rho^2))
+  }
+  else
+  {
+    X1[i] = rnorm(1, mean=rho*X2[i-1], sd=sqrt(1-rho^2))
+    X2[i] = X2[i-1]
+  }
+}
+
+plot(X1, X2, type="b", xlim=c(-11,11), ylim=c(-11,11), main="Gibbs Samplers")
