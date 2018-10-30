@@ -44,7 +44,6 @@ for (i in 1:4)
 }
 
 #1. Gibbs sampler
-
 #bivariate normal distribution <- target dist
 
 par(mfrow=c(1,2))
