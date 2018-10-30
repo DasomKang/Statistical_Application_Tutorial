@@ -43,7 +43,7 @@ for (i in 1:4)
   lines(x,y,col="red")
 }
 
-#1. Gibbs sampler
+#2. Gibbs sampler
 #bivariate normal distribution <- target dist
 
 par(mfrow=c(1,2))
