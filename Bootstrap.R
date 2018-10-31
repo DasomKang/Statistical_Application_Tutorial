@@ -7,7 +7,7 @@ install.packages("bootstrap")
 library(bootstrap)
 
 
-#1.Boostrap : Estimates of Standard Error and Bias using law data
+#1. Boostrap : Estimates of Standard Error and Bias using law data
 #1.1 Glance law data
 head(law) 
 cor(law$LSAT, law$GPA) #Sample Correlation
@@ -47,9 +47,36 @@ for (i in 1:n) Rjk[i] = cor(law[-i,1],law[-i,2]) #i번째 값 제외하고 구�
 sqrt((n-1)/n) * sum((Rjk-mean(Rjk)^2))
 
 
-
-#3. Bootstrap Confidence Intervals         
+############################################
+#3. Bootstrap : Confidence Intervals example 1 
+# Confidence Interval of mean
 install.packages("boot")
 library(boot) #내장 함수가 있어 for문보다 빠름
 
+#3.1 Generate data
+dat = rchisq(30,df=2)
+dat #n이 작아서 bootstrap이 좋다고 할 수는 없으나 연습용으로 data를 작게 만듦
+plot(dat)
 
+#3.2 Sample mean 
+theta.hat = mean(dat)
+theta.hat
+
+boot.f = function(x,i) mean(x[i]) # i = index, x = original data
+b.obj = boot(dat, statistic = boot.f, R=2000) #R = 반복횟수
+
+#3.3 Bootstrap samples
+nrow(b.obj$t) #2000 
+theta.j = as.vector(b.obj$t)
+
+alpha = 0.05
+
+#3.4 Standard Normal bootstrap confidence interval
+LB = theta.hat - qnorm((1-alpha/2))*sd(theta.j)
+UB = theta.hat + qnorm((1-alpha/2))*sd(theta.j)
+c(LB, UB)
+
+#3.5 Basic bootstrap confidence interval
+#3.6 Percentile bootstrap confidence interval
+#3.7 R built-in function for CIs
+boot.ci(b.obj, conf=0.95, type=c("norm","basic","perc"))
