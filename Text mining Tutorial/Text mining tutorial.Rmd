@@ -1,0 +1,32 @@
+---
+title: "Text mining Tutorial"
+output: html_notebook
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, comment = NA)
+suppressMessages({
+  library(ggplot2)
+  library(data.table)
+  library(magrittr)
+  library(dplyr)
+})
+```
+
+
+```{r}
+plot(cars)
+```
+
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
