@@ -1,4 +1,4 @@
-# 2018.10.31 recap
+# 2018.10.31 recap of the simulation class
 #####################################
 # Bootstrap
 #####################################
@@ -77,6 +77,11 @@ UB = theta.hat + qnorm((1-alpha/2))*sd(theta.j)
 c(LB, UB)
 
 #3.5 Basic bootstrap confidence interval
+basic = 2*theta.hat - quantile(theta.j,prob=c((1-alpha/2),(alpha/2)))
+basic
 #3.6 Percentile bootstrap confidence interval
+perce = quantile(theta.j,prob=c((alpha/2),(1-alpha/2)))
+perce
 #3.7 R built-in function for CIs
 boot.ci(b.obj, conf=0.95, type=c("norm","basic","perc"))
+
